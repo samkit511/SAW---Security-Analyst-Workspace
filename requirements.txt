@@ -1,0 +1,8 @@
+google-adk>=1.28.0,<2.0.0
+google-genai>=1.69.0,<2.0.0
+pydantic>=2.6.3
+pydantic-settings>=2.2.1
+fastapi>=0.115.0,<1.0.0
+uvicorn>=0.34.0,<1.0.0
+python-dotenv==1.0.1
+httpx>=0.28.1,<1.0.0

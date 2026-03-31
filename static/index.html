@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-Agent Security Operations Assistant</title>
+  <style>
+    :root{--bg:#061018;--panel:rgba(10,26,36,.88);--panel2:rgba(14,35,47,.94);--line:rgba(116,207,191,.15);--text:#edfffb;--muted:#91b7af;--accent:#63e7c2;--accent2:#79b8ff;--danger:#ff6c7a;--warn:#ffbe62;--shadow:0 26px 90px rgba(0,0,0,.35);--radius:24px;--mono:"IBM Plex Mono","Consolas",monospace;--display:"Segoe UI","Helvetica Neue",sans-serif}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at top left,rgba(121,184,255,.13),transparent 28%),radial-gradient(circle at right top,rgba(99,231,194,.16),transparent 24%),linear-gradient(180deg,#041017 0%,#07151d 52%,#091119 100%);color:var(--text);font-family:var(--display);padding:20px}
+    .shell{max-width:1460px;margin:0 auto;display:grid;gap:18px}.hero,.panel{background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(18px);border-radius:32px}.hero{padding:28px;display:grid;gap:24px}.hero-top,.hero-meta,.workspace-grid,.panel-head,.list-row,.step,.status-top{display:flex;gap:14px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}.eyebrow,.pill,.tag,.signal{display:inline-flex;align-items:center;gap:8px;border-radius:999px}.eyebrow{padding:8px 12px;border:1px solid rgba(99,231,194,.22);background:rgba(99,231,194,.08);color:var(--accent);font-size:12px;letter-spacing:.16em;text-transform:uppercase}.pulse{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 rgba(99,231,194,.65);animation:pulse 1.8s infinite}@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(99,231,194,.65)}70%{box-shadow:0 0 0 16px rgba(99,231,194,0)}100%{box-shadow:0 0 0 0 rgba(99,231,194,0)}}
+    h1{margin:14px 0 10px;font-size:clamp(2.2rem,5vw,4.8rem);line-height:.94;letter-spacing:-.04em;max-width:10ch}.subtitle{margin:0;color:var(--muted);line-height:1.65;max-width:70ch}.hero-cards,.workspace-grid{display:grid;gap:18px}.hero-cards{grid-template-columns:2fr repeat(4,minmax(130px,1fr))}.card,.mini-card,.panel-body,.trace-box,.task-item,.action-item,.message-item,.run-item,.step{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:20px}.card{padding:16px 18px;min-height:108px}.label,.panel-title{display:block;color:var(--muted);font-size:.76rem;text-transform:uppercase;letter-spacing:.16em}.value{margin-top:8px;font-size:clamp(1.2rem,3vw,1.7rem);font-weight:700;letter-spacing:-.03em}.sub{margin-top:8px;color:var(--muted);line-height:1.55;font-size:.92rem}
+    .pill{padding:10px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.pill b{color:var(--text)}.workspace-grid{grid-template-columns:1.2fr 1fr}.panel{padding:0}.panel-head{padding:20px 22px 0}.panel-title{margin:0;font-size:1rem;letter-spacing:.08em}.panel-body{margin:18px 22px 22px;padding:18px;background:var(--panel2);display:grid;gap:16px}
+    .status-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}.status-card{padding:16px 18px}.status-value{margin-top:10px;font-size:1.05rem;font-weight:700}.status-meta{margin-top:10px;color:var(--muted);font-size:.86rem;line-height:1.5}.signal{padding:6px 10px;background:rgba(121,184,255,.12);color:var(--accent2);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase}.signal.warn{background:rgba(255,190,98,.14);color:var(--warn)}.signal.danger{background:rgba(255,108,122,.14);color:var(--danger)}.signal.good{background:rgba(99,231,194,.12);color:var(--accent)}
+    .step{padding:14px 16px;align-items:center}.step-agent{font-weight:700}.step small,.message-item small,.run-item small{display:block;color:var(--muted);margin-top:4px;font-size:.82rem}.tag{padding:6px 10px;background:rgba(99,231,194,.12);color:var(--accent);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase}.tag.warn{background:rgba(255,190,98,.12);color:var(--warn)}.tag.danger{background:rgba(255,108,122,.12);color:var(--danger)}
+    .list{display:grid;gap:10px}.task-item,.action-item,.message-item,.run-item{padding:12px 14px}.trace-box{padding:16px;font-family:var(--mono);font-size:.84rem;line-height:1.58;overflow:auto;max-height:460px;background:#021017;color:#b8fff0}.muted{color:var(--muted)}.empty{color:var(--muted);padding:16px;border:1px dashed rgba(255,255,255,.08);border-radius:18px}.split{display:grid;gap:16px;grid-template-columns:1fr 1fr}.footer-note{margin:0;color:var(--muted);line-height:1.6}
+    @media (max-width:1180px){.hero-cards,.workspace-grid,.split,.status-grid{grid-template-columns:1fr}}@media (max-width:760px){body{padding:14px}.hero,.panel{border-radius:24px}.hero{padding:20px}.card,.panel-body,.step,.trace-box,.task-item,.action-item,.message-item,.run-item,.status-card{border-radius:18px}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-top">
+        <div>
+          <div class="eyebrow"><span class="pulse"></span>Multi-Agent Security Operations Assistant</div>
+          <h1>Security Analyst Workspace</h1>
+          <p class="subtitle">A coordination-first console for triaging incidents, delegating specialist agent work, tracking analyst tasks, and reviewing the full collaboration trail behind every security decision.</p>
+        </div>
+        <div class="hero-meta">
+          <div class="pill">Mode <b id="mode-badge">--</b></div>
+          <div class="pill">Detection <b id="model-display">--</b></div>
+          <div class="pill">ADK <b id="adk-display">--</b></div>
+        </div>
+      </div>
+      <div class="hero-cards">
+        <article class="card"><span class="label">Executive Summary</span><div class="value" id="summary-banner">Waiting for assistant activity...</div><div class="sub" id="summary-sub">Send a request to <code>/assistant/request</code> or <code>/ingest-log</code> to populate the workspace.</div></article>
+        <article class="card"><span class="label">Incident</span><div class="value" id="incident-id">--</div><div class="sub">Persistent case record backed by SQLite.</div></article>
+        <article class="card"><span class="label">Decision</span><div class="value" id="decision-value">--</div><div class="sub" id="decision-sub">No decision yet.</div></article>
+        <article class="card"><span class="label">Open Tasks</span><div class="value" id="task-count">0</div><div class="sub">Follow-up work owned by analysts or agents.</div></article>
+        <article class="card"><span class="label">Last Activity</span><div class="value" id="timestamp">--:--:--</div><div class="sub" id="timestamp-sub">Awaiting telemetry.</div></article>
+      </div>
+      <div class="status-grid">
+        <article class="card status-card"><span class="label">Threat Profile</span><div class="status-top"><div class="status-value" id="threat-value">--</div><span class="signal good" id="deterministic-signal">--</span></div><div class="status-meta" id="threat-meta">Awaiting threat classification.</div></article>
+        <article class="card status-card"><span class="label">Confidence</span><div class="status-top"><div class="status-value" id="confidence-value">--</div><span class="signal" id="confidence-signal">--</span></div><div class="status-meta" id="confidence-meta">Calibrated bucket and semantics appear here.</div></article>
+        <article class="card status-card"><span class="label">Escalation</span><div class="status-top"><div class="status-value" id="escalation-value">--</div><span class="signal" id="escalation-signal">--</span></div><div class="status-meta" id="escalation-meta">Burst and sustained activity are tracked across the sliding window.</div></article>
+        <article class="card status-card"><span class="label">Memory State</span><div class="status-top"><div class="status-value" id="memory-value">--</div><span class="signal" id="memory-signal">--</span></div><div class="status-meta" id="memory-meta">Recent event count and applied mitigation state.</div></article>
+        <article class="card status-card"><span class="label">ADK Window</span><div class="status-top"><div class="status-value" id="adk-window-value">--</div><span class="signal" id="adk-window-signal">--</span></div><div class="status-meta" id="adk-window-meta">Low-confidence review and override eligibility.</div></article>
+      </div>
+    </section>
+
+    <section class="workspace-grid">
+      <section class="panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Agent Orchestration Panel</h2>
+          <div class="pill">Plan Steps <b id="plan-count">0</b></div>
+        </div>
+        <div class="panel-body">
+          <div id="plan-list" class="list"><div class="empty">No coordination plan yet.</div></div>
+          <div>
+            <span class="label">Why The Agents Decided This</span>
+            <div id="agent-summary-list" class="list" style="margin-top:12px;"><div class="empty">No agent summary yet.</div></div>
+          </div>
+          <div>
+            <span class="label">Agent Messages</span>
+            <div id="message-list" class="list" style="margin-top:12px;"><div class="empty">No handoffs yet.</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Incident + Task Workspace</h2>
+          <div class="pill">Request <b id="request-type">--</b></div>
+        </div>
+        <div class="panel-body">
+          <div class="split">
+            <div>
+              <span class="label">Incident Summary</span>
+              <div id="incident-summary" class="empty" style="margin-top:12px;">No incident loaded.</div>
+            </div>
+            <div>
+              <span class="label">Actions Taken</span>
+              <div id="action-list" class="list" style="margin-top:12px;"><div class="empty">No actions yet.</div></div>
+            </div>
+          </div>
+          <div>
+            <span class="label">Open Tasks</span>
+            <div id="task-list" class="list" style="margin-top:12px;"><div class="empty">No tasks yet.</div></div>
+          </div>
+          <div>
+            <span class="label">Recent Agent Runs</span>
+            <div id="run-list" class="list" style="margin-top:12px;"><div class="empty">No agent runs yet.</div></div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">Technical Trace</h2>
+        <div class="pill">Latest Trace <b id="trace-id">--</b></div>
+      </div>
+      <div class="panel-body">
+        <p class="footer-note">Use this trace to show when deterministic high-confidence logic stayed authoritative and when ADK participated in low-confidence review.</p>
+        <div id="trace-box" class="trace-box">{ "status": "Waiting for assistant activity..." }</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const state={latest:null};
+    const els={
+      summary:document.getElementById("summary-banner"),
+      summarySub:document.getElementById("summary-sub"),
+      incidentId:document.getElementById("incident-id"),
+      decision:document.getElementById("decision-value"),
+      decisionSub:document.getElementById("decision-sub"),
+      taskCount:document.getElementById("task-count"),
+      timestamp:document.getElementById("timestamp"),
+      timestampSub:document.getElementById("timestamp-sub"),
+      mode:document.getElementById("mode-badge"),
+      model:document.getElementById("model-display"),
+      adk:document.getElementById("adk-display"),
+      planCount:document.getElementById("plan-count"),
+      requestType:document.getElementById("request-type"),
+      traceId:document.getElementById("trace-id"),
+      planList:document.getElementById("plan-list"),
+      agentSummaryList:document.getElementById("agent-summary-list"),
+      messageList:document.getElementById("message-list"),
+      incidentSummary:document.getElementById("incident-summary"),
+      actionList:document.getElementById("action-list"),
+      taskList:document.getElementById("task-list"),
+      runList:document.getElementById("run-list"),
+      traceBox:document.getElementById("trace-box"),
+      threatValue:document.getElementById("threat-value"),
+      threatMeta:document.getElementById("threat-meta"),
+      deterministicSignal:document.getElementById("deterministic-signal"),
+      confidenceValue:document.getElementById("confidence-value"),
+      confidenceSignal:document.getElementById("confidence-signal"),
+      confidenceMeta:document.getElementById("confidence-meta"),
+      escalationValue:document.getElementById("escalation-value"),
+      escalationSignal:document.getElementById("escalation-signal"),
+      escalationMeta:document.getElementById("escalation-meta"),
+      memoryValue:document.getElementById("memory-value"),
+      memorySignal:document.getElementById("memory-signal"),
+      memoryMeta:document.getElementById("memory-meta"),
+      adkWindowValue:document.getElementById("adk-window-value"),
+      adkWindowSignal:document.getElementById("adk-window-signal"),
+      adkWindowMeta:document.getElementById("adk-window-meta")
+    };
+
+    function tagClass(value){if(value==="EXECUTE"||value==="ACTIONED")return"tag danger";if(value==="OBSERVE"||value==="OPEN")return"tag warn";return"tag"}
+    function signalClass(kind){if(kind==="danger")return"signal danger";if(kind==="warn")return"signal warn";if(kind==="good")return"signal good";return"signal"}
+    function ageText(ts){if(!ts)return"Awaiting telemetry.";const now=Date.now(),delta=Math.max(0,Math.floor((now-ts*1000)/1000));if(delta<60)return`Updated ${delta}s ago.`;const mins=Math.floor(delta/60);if(mins<60)return`Updated ${mins}m ago.`;const hrs=Math.floor(mins/60);return`Updated ${hrs}h ago.`}
+    function renderList(container,items,renderer,emptyText){if(!items||!items.length){container.innerHTML=`<div class="empty">${emptyText}</div>`;return}container.innerHTML=items.map(renderer).join("")}
+
+    function render(root){
+      state.latest=root;
+      const meta=root.meta||{},trace=root.trace||{},workspace=root.workspace||trace.incident_workspace||{},incident=workspace.incident||{},threat=trace.stage_3_threat_detection||{},decision=trace.stage_4_decision||{},escalation=trace.stage_4b_escalation||{},memory=trace.stage_6_memory_state||{},plan=root.plan||[],orchestration=trace.agent_orchestration||{},messages=root.agent_messages||orchestration.agent_messages||[],agentSummary=root.agent_summary||orchestration.agent_summary||[],tasks=root.tasks||workspace.tasks||[],actions=root.actions||workspace.actions||[],runs=orchestration.agent_runs||workspace.agent_runs||[],adk=trace.stage_3b_adk_agent_review||{},resilience=meta.resilience||{};
+      els.summary.textContent=root.summary||"Assistant ready.";
+      els.summarySub.textContent=resilience.workflow_status==="DEGRADED"?`Workflow degraded safely with ${resilience.failed_agents||0} captured agent failure(s).`:adk.influenced_outcome?"ADK influenced a low-confidence case.":adk.adk_enabled?"ADK enabled, but skipped for a high-confidence deterministic case.":"Deterministic agents remained primary for the latest case.";
+      els.incidentId.textContent=root.incident_id||"--";
+      els.decision.textContent=decision.decision||incident.decision||"--";
+      els.decisionSub.textContent=decision.decision_reason||incident.summary||"No decision explanation yet.";
+      els.taskCount.textContent=String(tasks.filter(task=>task.status!=="COMPLETED").length);
+      els.timestamp.textContent=meta.timestamp?new Date(meta.timestamp*1000).toLocaleTimeString():"--:--:--";
+      els.timestampSub.textContent=ageText(meta.timestamp);
+      els.mode.textContent=meta.mode||"--";
+      els.model.textContent=meta.model_info&&meta.model_info.detection_model||"--";
+      els.adk.textContent=adk.adk_enabled?(adk.adk_status||"ready"):"disabled";
+      els.planCount.textContent=String(plan.length);
+      els.requestType.textContent=root.request_type||"--";
+      els.traceId.textContent=meta.trace_id||root.request_id||"--";
+      els.incidentSummary.innerHTML=incident.summary?`<div><strong>${incident.summary}</strong></div><div class="sub">Threat: ${incident.threat_type||"--"} | Status: ${incident.status||"--"} | Decision: ${incident.decision||"--"}</div>`:`No incident loaded.`;
+      els.threatValue.textContent=threat.threat_type||threat.type||"--";
+      els.threatMeta.textContent=`Source IP ${meta.source_ip||incident.source_ip||"--"} | Path ${trace.stage_2_log_analysis&&trace.stage_2_log_analysis.path||"--"}`;
+      els.deterministicSignal.className=signalClass(threat.deterministic_match?"good":"warn");
+      els.deterministicSignal.textContent=threat.deterministic_match?"Deterministic":"Fallback";
+      els.confidenceValue.textContent=threat.confidence_bucket||"--";
+      els.confidenceSignal.className=signalClass(threat.confidence_bucket==="VERY_HIGH"||threat.confidence_bucket==="HIGH"?"good":"warn");
+      els.confidenceSignal.textContent=threat.confidence!=null?`Score ${threat.confidence}`:"--";
+      els.confidenceMeta.textContent=threat.confidence_semantics||"Confidence semantics unavailable.";
+      els.escalationValue.textContent=escalation.status?"ACTIVE":"NORMAL";
+      els.escalationSignal.className=signalClass(escalation.status?"danger":"good");
+      els.escalationSignal.textContent=escalation.profile||"--";
+      els.escalationMeta.textContent=escalation.reason||"No escalation activity recorded.";
+      els.memoryValue.textContent=`${memory.events_last_60s||0} events`;
+      els.memorySignal.className=signalClass((memory.applied_actions_count||0)>0?"good":"warn");
+      els.memorySignal.textContent=`${memory.applied_actions_count||0} actions`;
+      els.memoryMeta.textContent=`Mitigation memory tracks repeated events and applied actions for this source.`;
+      els.adkWindowValue.textContent=adk.adk_enabled?"Enabled":"Disabled";
+      els.adkWindowSignal.className=signalClass(adk.influenced_outcome?"danger":adk.adk_enabled?"good":"warn");
+      els.adkWindowSignal.textContent=adk.adk_status||"--";
+      els.adkWindowMeta.textContent=adk.reason||"ADK override window opens only for low-confidence or fallback cases.";
+
+      renderList(els.planList,plan,step=>`<div class="step"><div><div class="step-agent">${step.agent}</div><small>${step.purpose||step.step||"Planned step"}</small></div><span class="tag">${step.step||"step"}</span></div>`,"No coordination plan yet.");
+      renderList(els.agentSummaryList,agentSummary,item=>`<div class="message-item"><strong>Agent Reasoning</strong><small>${item}</small></div>`,"No agent summary yet.");
+      renderList(els.messageList,messages,message=>`<div class="message-item"><strong>${message.agent}</strong><small>${message.message||"No message"}</small>${message.handoff_to?`<div class="sub">Handoff to ${message.handoff_to}</div>`:""}</div>`,"No handoffs yet.");
+      renderList(els.actionList,actions,action=>`<div class="action-item"><div><strong>${action.action_name||action.action||"Action"}</strong><small>${action.scope||action.impact||"control_plane_demo"}</small></div><span class="${tagClass(action.impact||action.status||"MEDIUM")}">${action.impact||action.status||"INFO"}</span></div>`,"No actions yet.");
+      renderList(els.taskList,tasks,task=>`<div class="task-item"><div><strong>${task.title}</strong><small>${task.description||"No description"}</small></div><span class="${tagClass(task.status||task.priority||"OPEN")}">${task.status||task.priority||"OPEN"}</span></div>`,"No tasks yet.");
+      renderList(els.runList,runs,run=>`<div class="run-item"><div><strong>${run.agent_name||run.agent||"Agent"}</strong><small>${run.step_name||run.step||"step"} &middot; ${run.message||"No detail"}</small></div><span class="${tagClass(run.status||"COMPLETED")}">${run.status||"COMPLETED"}</span></div>`,"No agent runs yet.");
+      els.traceBox.textContent=JSON.stringify(root,null,2);
+    }
+
+    async function fetchLatest(){
+      try{
+        const response=await fetch("/latest");
+        if(!response.ok)return;
+        const data=await response.json();
+        if(!data||!data.summary)return;
+        render(data);
+      }catch(error){
+        console.error(error);
+      }
+    }
+
+    fetchLatest();
+    setInterval(fetchLatest,1500);
+  </script>
+</body>
+</html>

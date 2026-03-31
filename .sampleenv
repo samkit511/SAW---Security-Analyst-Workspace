@@ -1,0 +1,39 @@
+# Copy this file to `.env` before running locally.
+# PowerShell:
+# Copy-Item .sampleenv .env
+
+# Core server
+PORT=8080
+ASA_API_KEY=demo
+ASA_MODE=HYBRID
+ASA_DB_PATH=data/assistant.db
+
+# Request limits and resilience
+ASA_MAX_INFLIGHT=8
+ASA_MAX_REQUEST_BYTES=16384
+ASA_RATE_LIMIT_WINDOW_SECONDS=60
+ASA_RATE_LIMIT_MAX_REQUESTS=12
+ASA_REPLAY_WINDOW_SECONDS=30
+
+# Decision thresholds
+ASA_EXECUTE_THRESHOLD=2.5
+ASA_OBSERVE_THRESHOLD=1.5
+
+# Feature flags
+ASA_ENABLE_ADK_ADVISORY=true
+ASA_ENABLE_ESCALATION=true
+ASA_ENABLE_HEURISTICS=true
+
+# Models
+ASA_ADK_MODEL=gemini-2.5-flash
+ASA_DETECTION_MODEL=gemini-2.5-flash
+ASA_REMEDIATION_MODEL=gemini-2.5-flash
+
+# LLM / ADK behavior
+ASA_ADK_CACHE_TTL_SECONDS=120
+ASA_LLM_MAX_ATTEMPTS=2
+
+# Gemini / Google credentials
+# Set one of these if you want live Google GenAI / ADK calls.
+GOOGLE_API_KEY=
+GEMINI_API_KEY=
